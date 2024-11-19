@@ -1,4 +1,4 @@
-package modelo;
+package com.redesocial.modelo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Usuario {
 
     private List<Post> posts;
 
-    public Usuario(String nome, String username, String email, String senha, LocalDateTime dataCadastro, List<Usuario> amigos, List<Post> posts) {
+    public Usuario(String nome, String username, String email, String senha, List<Usuario> amigos, List<Post> posts) {
         this.nome = nome;
         this.username = username;
         this.email = email;

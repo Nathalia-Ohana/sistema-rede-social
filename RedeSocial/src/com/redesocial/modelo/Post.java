@@ -1,4 +1,4 @@
-package modelo;
+package com.redesocial.modelo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Post {
 
     private List<Comentario> comentarios;
 
-    public Post(Integer id, Usuario autor, String conteudo, LocalDateTime dataPublicacao, List<Usuario> curtidas, List<Comentario> comentarios) {
+    public Post(Integer id, Usuario autor, String conteudo, List<Usuario> curtidas, List<Comentario> comentarios) {
         this.id = id;
         this.autor = autor;
         this.conteudo = conteudo;
