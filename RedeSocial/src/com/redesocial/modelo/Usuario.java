@@ -122,10 +122,17 @@ public class Usuario {
     public int hashCode() {
         return Objects.hash(getId());
     }
-    public void adicionarAmigo(Usuario amigo){
+
+    public void adicionarAmigo(Usuario amigo) {
+        if (!amigos.contains(amigo)) {
+            amigos.add(amigo);
+        }
     }
 
     public void removerAmigo(Usuario amigo){
+        if (amigos.contains(amigo)) {
+            amigos.remove(amigo);
+        }
     }
 
     public void adicionarPost(Post post){

@@ -1,5 +1,6 @@
 package com.redesocial.gerenciador;
 
+import com.redesocial.exception.UsuarioException;
 import com.redesocial.exception.ValidacaoException;
 import com.redesocial.modelo.Usuario;
 
@@ -18,10 +19,15 @@ public class GerenciadorUsuarios {
     }
 
     public void cadastrar(Usuario usuario) {
-        validarUsuario(usuario);
-
-        usuario.setId(proximoId++);
-
+        try{
+            validarUsuario(usuario);
+            usuario.setId(proximoId++);
+            usuarios.add(usuario);
+        }catch (ValidacaoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao cadastrar usuário" + e.getMessage(), e);
+        }
     }
 
     private void validarUsuario(Usuario usuario) {
@@ -68,5 +74,31 @@ public class GerenciadorUsuarios {
             }
         }
         return user;
+    }
+    public boolean atualizar(Usuario usuario){
+        try {
+            validarUsuario(usuario);
+
+            for (int i = 0; i < usuarios.size(); i++) {
+                if (usuarios.get(i).getId().equals(usuario.getId())) {
+                    usuarios.set(i, usuario);
+                    return true;
+                }
+            }
+            return false;
+        } catch (ValidacaoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao atualizar usuário" + e.getMessage(), e);
+        }
+    }
+    public boolean deletar(int id){
+        return usuarios.removeIf(usuario -> usuario.getId() == id);
+    }
+    public void adicionarAmizade(int idUsuario1, int idUsuario2){
+        buscarPorId(idUsuario1).adicionarAmigo(buscarPorId(idUsuario2));
+    }
+    public void removerAmizade(int idUsuario1, int idUsuario2){
+        buscarPorId(idUsuario1).removerAmigo(buscarPorId(idUsuario2));
     }
 }
