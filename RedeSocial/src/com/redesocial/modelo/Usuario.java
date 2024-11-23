@@ -1,5 +1,7 @@
 package com.redesocial.modelo;
 
+import com.redesocial.exception.ValidacaoException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -128,5 +130,6 @@ public class Usuario {
 
     public void adicionarPost(Post post){
     }
+
 }
 
