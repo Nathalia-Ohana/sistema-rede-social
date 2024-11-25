@@ -101,4 +101,8 @@ public class GerenciadorUsuarios {
     public void removerAmizade(int idUsuario1, int idUsuario2){
         buscarPorId(idUsuario1).removerAmigo(buscarPorId(idUsuario2));
     }
+
+    public List<Usuario> listarUsuarios(){
+        return usuarios;
+    }
 }

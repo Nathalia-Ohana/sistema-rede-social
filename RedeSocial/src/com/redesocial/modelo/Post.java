@@ -86,11 +86,18 @@ public class Post {
     }
 
     public void adicionarCurtida(Usuario usuario){
+        if(!curtidas.contains(usuario)){
+            curtidas.add(usuario);
+        }
     }
 
     public void removerCurtida(Usuario usuario){
+        if(curtidas.contains(usuario)){
+            curtidas.add(usuario);
+        }
     }
 
     public void adicionarComentario(Comentario comentario){
+        comentarios.add(comentario);
     }
 }
