@@ -3,6 +3,7 @@ package com.redesocial.modelo;
 import com.redesocial.exception.ValidacaoException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,14 +24,14 @@ public class Usuario {
 
     private List<Post> posts;
 
-    public Usuario(String nome, String username, String email, String senha, List<Usuario> amigos, List<Post> posts) {
+    public Usuario(String nome, String username, String email, String senha) {
         this.nome = nome;
         this.username = username;
         this.email = email;
         this.senha = senha;
         this.dataCadastro = LocalDateTime.now();
-        this.amigos = amigos;
-        this.posts = posts;
+        this.amigos = new ArrayList<>();
+        this.posts = new ArrayList<>();
     }
 
     public Integer getId() {
