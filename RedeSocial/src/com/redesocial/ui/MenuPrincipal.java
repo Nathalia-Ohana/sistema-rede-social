@@ -1,10 +1,12 @@
 package com.redesocial.ui;
 
+import com.redesocial.exception.AutenticacaoException;
 import com.redesocial.exception.ValidacaoException;
 import com.redesocial.gerenciador.GerenciadorPosts;
 import com.redesocial.modelo.Usuario;
 import com.redesocial.gerenciador.GerenciadorUsuarios;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,9 +16,9 @@ public class MenuPrincipal {
     private final GerenciadorUsuarios gerenciadorUsuarios;
     private final GerenciadorPosts gerenciadorPosts;
 
-    public MenuPrincipal(GerenciadorUsuarios gerenciadorUsuarios, GerenciadorPosts gerenciadorPosts) {
-        this.gerenciadorUsuarios = gerenciadorUsuarios;
-        this.gerenciadorPosts = gerenciadorPosts;
+    public MenuPrincipal() {
+        this.gerenciadorUsuarios = new GerenciadorUsuarios();
+        this.gerenciadorPosts = new GerenciadorPosts();
     }
 
     List<Usuario> usuarios = new ArrayList<>();
@@ -57,6 +59,15 @@ public class MenuPrincipal {
 
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
+
+        Usuario usuario = gerenciadorUsuarios.buscarPorUsername(username);
+        if(usuario == null){
+            throw new AutenticacaoException("Username inválido!");
+        }
+        if(!usuario.getSenha().equals(senha)){
+            throw new AutenticacaoException("Senha incorreta!");
+        }
+        exibirMenuLogado(usuario);
     }
 
     public void cadastrarUsuario() {
@@ -83,6 +94,10 @@ public class MenuPrincipal {
         } catch (ValidacaoException e) {
             System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
         }
+    }
+    private void exibirMenuLogado(Usuario usuario){
+        MenuUsuario menuUsuario = new MenuUsuario(usuario, gerenciadorUsuarios, gerenciadorPosts);
+        menuUsuario.exibirMenu();
     }
 }
 
