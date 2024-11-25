@@ -53,8 +53,45 @@ public class MenuUsuario {
         int opcao = scanner.nextInt();
 
         if(opcao == 1){
-
+            editarPerfil();
         }
+    }
+
+    private void editarPerfil(){
+        System.out.println("Nome (" + usuario.getNome() + "): " );
+        String nome = scanner.nextLine();
+        System.out.println("Username (" + usuario.getUsername() + "): " );
+        String username = scanner.nextLine();
+        System.out.println("Email (" + usuario.getEmail() + "): " );
+        String email = scanner.nextLine();
+        System.out.println("Senha (" + usuario.getSenha() + "): " );
+        String senha = scanner.nextLine();
+
+        if(!usuario.getNome().isEmpty()){
+            usuario.setNome(nome);
+        }
+        if(!usuario.getUsername().isEmpty()){
+            usuario.setUsername(username);
+        }
+        if(!usuario.getEmail().isEmpty()){
+            usuario.setEmail(email);
+        }
+        if(!usuario.getSenha().isEmpty()){
+            usuario.setSenha(senha);
+        }
+        gerenciadorUsuarios.atualizar(usuario);
+    }
+    private void buscarUsuarios(){
+        System.out.println("Digite o username: ");
+        String username = scanner.nextLine();
+
+        for(Usuario usuario : gerenciadorUsuarios.listarUsuarios()){
+            if(usuario.getUsername().equals(username)){
+                System.out.println(usuario);
+            }
+        }
+    }
+    private void gerenciarAmizades(){
 
     }
 }
