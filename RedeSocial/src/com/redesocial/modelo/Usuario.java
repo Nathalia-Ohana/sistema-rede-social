@@ -100,17 +100,38 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
-                ", dataCadastro=" + dataCadastro +
-                ", amigos=" + amigos +
-                ", posts=" + posts +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Usuario { \n")
+                .append("  id=").append(id).append(",\n")
+                .append("  nome='").append(nome).append("',\n")
+                .append("  username='").append(username).append("',\n")
+                .append("  email='").append(email).append("',\n")
+                .append("  senha='").append(senha).append("',\n")
+                .append("  dataCadastro=").append(dataCadastro).append(",\n")
+                .append("  amigos=[\n");
+
+        for (Usuario amigo : amigos) {
+            sb.append("    ").append(amigo.toString()).append(",\n");
+        }
+        if (!amigos.isEmpty()) {
+            sb.deleteCharAt(sb.length() - 2);
+        }
+        sb.append("  ],\n")
+                .append("  posts=[\n");
+
+        for (Post post : posts) {
+            sb.append("    ").append(post.toString()).append(",\n");
+        }
+        if (!posts.isEmpty()) {
+            sb.deleteCharAt(sb.length() - 2);
+        }
+
+        sb.append("  ]\n")
+                .append("}");
+
+        return sb.toString();
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -137,6 +158,9 @@ public class Usuario {
     }
 
     public void adicionarPost(Post post){
+        if (!posts.contains(post)) {
+            posts.add(post);
+        }
     }
 
 }
