@@ -1,11 +1,13 @@
 package com.redesocial.modelo;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Comentario {
 
-    private Integer id;
+    private static final AtomicInteger contador = new AtomicInteger(0);
 
+    private Integer id;
     private Usuario autor;
 
     private String conteudo;
@@ -14,8 +16,8 @@ public class Comentario {
 
     private Post post;
 
-    public Comentario(Integer id, Usuario autor, String conteudo, Post post) {
-        this.id = id;
+    public Comentario(Usuario autor, String conteudo, Post post) {
+        this.id = contador.incrementAndGet();
         this.autor = autor;
         this.conteudo = conteudo;
         this.dataComentario = LocalDateTime.now();
