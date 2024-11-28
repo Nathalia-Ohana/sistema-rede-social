@@ -3,57 +3,31 @@ package com.redesocial;
 import com.redesocial.modelo.*;
 import com.redesocial.gerenciador.*;
 import com.redesocial.ui.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Instanciar os gerenciadores
-        GerenciadorUsuarios gerenciadorUsuarios = new GerenciadorUsuarios();
-        GerenciadorPosts gerenciadorPosts = new GerenciadorPosts();
 
-        // Criar dados fictícios
-        Usuario usuario1 = new Usuario(null, "Pedro Oliveira", "pedro123", "pedro@email.com", "senha123", LocalDateTime.now(), null, null);
-        Usuario usuario2 = new Usuario(null, "Ana Mendonça", "ana456", "ana@email.com", "senha456", LocalDateTime.now(), null, null);
+        try {
+            MenuPrincipal menu = new MenuPrincipal();
 
-        // Cadastrar usuários
-        gerenciadorUsuarios.cadastrar(usuario1);
-        gerenciadorUsuarios.cadastrar(usuario2);
+            Usuario usuario1 = new Usuario("Pedro Oliveira", "pedro123", "pedro@email.com", "senha123");
+            Usuario usuario2 = new Usuario("Ana Mendonça", "ana456", "ana@email.com", "senha456");
 
-        // Criar posts para os usuários
-        Post post1 = new Post(null, usuario1, "Meu primeiro post!", LocalDateTime.now(), null, null);
-        Post post2 = new Post(null, usuario2, "Olá, rede social!", LocalDateTime.now(), null, null);
+            menu.getGerenciadorUsuarios().cadastrar(usuario1);
+            menu.getGerenciadorUsuarios().cadastrar(usuario2);
 
-        // Publicar os posts
-        gerenciadorPosts.criar(post1);
-        gerenciadorPosts.criar(post2);
+            Post post1 = new Post(usuario1, "Olá, mundo! Este é meu primeiro post na rede social!🎉");
+            Post post2 = new Post(usuario2, "Olá, rede social!👋🏽");
 
-        // Adicionar amizade
-        gerenciadorUsuarios.adicionarAmizade(usuario1.getId(), usuario2.getId());
+            menu.getGerenciadorPosts().criar(post1);
+            menu.getGerenciadorPosts().criar(post2);
 
-        // Simular interações
-        gerenciadorPosts.curtir(post1.getId(), usuario2.getId());
-        gerenciadorPosts.comentar(new Comentario(null, usuario2, "Parabéns pelo post!", LocalDateTime.now(), post1));
-
-        // Listar dados para validação
-        System.out.println("=== Usuários Cadastrados ===");
-        for (Usuario u : gerenciadorUsuarios.buscarPorNome("")) {
-            System.out.println(u);
+            menu.exibirMenu();
+        } catch (Exception e) {
+            System.err.println("Ocorreu um erro no sistema: " + e.getMessage());
         }
-
-        System.out.println("\n=== Posts Publicados ===");
-        for (Post p : gerenciadorPosts.listarPorUsuario(usuario1.getId())) {
-            System.out.println(p);
-        }
-
-        System.out.println("\n=== Feed de Notícias ===");
-        List<Post> feed = gerenciadorPosts.listarPorUsuario(usuario1.getId()); // Exemplo simplificado
-        for (Post p : feed) {
-            System.out.println(p);
-        }
-
-        // Exibir Menu Principal
-        MenuPrincipal menu = new MenuPrincipal(gerenciadorUsuarios, gerenciadorPosts);
-        menu.exibirMenu();
     }
 }

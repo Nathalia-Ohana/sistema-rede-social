@@ -1,5 +1,7 @@
 package com.redesocial.ui;
 
+import com.redesocial.exception.PostException;
+import com.redesocial.exception.UsuarioException;
 import com.redesocial.gerenciador.GerenciadorPosts;
 import com.redesocial.gerenciador.GerenciadorUsuarios;
 import com.redesocial.modelo.Comentario;
@@ -12,11 +14,11 @@ import java.util.Scanner;
 
 public class MenuUsuario {
     Scanner scanner = new Scanner(System.in);
-    private Usuario usuario;
+    private final Usuario usuario;
 
-    private GerenciadorUsuarios gerenciadorUsuarios;
+    private final GerenciadorUsuarios gerenciadorUsuarios;
 
-    private GerenciadorPosts gerenciadorPosts;
+    private final GerenciadorPosts gerenciadorPosts;
 
     public MenuUsuario(Usuario usuario, GerenciadorUsuarios gerenciadorUsuarios, GerenciadorPosts gerenciadorPosts) {
         this.usuario = usuario;
@@ -38,19 +40,14 @@ public class MenuUsuario {
             opcao = scanner.nextInt();
             scanner.nextLine();
 
-            switch (opcao){
-                case 1:
-                    criarPost();
-                case 2:
-                    verPerfil();
-                case 3:
-                    buscarUsuarios();
-                case 4:
-                    gerenciarAmizades();
-                case 5:
-                    verFeedNoticias();
-                default:
-                    System.out.println("Selecione uma opção");
+            switch (opcao) {
+                case 1 -> criarPost();
+                case 2 ->verPerfil();
+                case 3 -> buscarUsuarios();
+                case 4 -> gerenciarAmizades();
+                case 5 -> verFeedNoticias();
+                case 6 -> System.out.println("Logout realizado com sucesso.");
+                default -> System.out.println("Selecione uma opção");
             }
         } while (opcao != 6);
     }
@@ -62,130 +59,179 @@ public class MenuUsuario {
             Post post = new Post(usuario, conteudo);
             gerenciadorPosts.criar(post);
             usuario.adicionarPost(post);
+            System.out.println("Post criado com sucesso!");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new PostException("Erro ao criar post: " + e.getMessage());
         }
     }
 
     private void verPerfil() {
-        System.out.println(usuario);
-        System.out.println("1. Editar perfil \n2. Sair");
-        int opcao = scanner.nextInt();
+        try {
+            System.out.println(usuario);
+            System.out.println("1. Editar perfil \n2. Sair");
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
 
-        if (opcao == 1) {
-            editarPerfil();
+            if (opcao == 1) {
+                editarPerfil();
+            }
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao exibir perfil: " + e.getMessage());
         }
     }
 
     private void editarPerfil() {
-        System.out.println("Nome (" + usuario.getNome() + "): ");
-        String nome = scanner.nextLine();
-        System.out.println("Username (" + usuario.getUsername() + "): ");
-        String username = scanner.nextLine();
-        System.out.println("Email (" + usuario.getEmail() + "): ");
-        String email = scanner.nextLine();
-        System.out.println("Senha (" + usuario.getSenha() + "): ");
-        String senha = scanner.nextLine();
+        try {
+            System.out.println("Nome (" + usuario.getNome() + "): ");
+            String nome = scanner.nextLine();
+            System.out.println("Username (" + usuario.getUsername() + "): ");
+            String username = scanner.nextLine();
+            System.out.println("Email (" + usuario.getEmail() + "): ");
+            String email = scanner.nextLine();
+            System.out.println("Senha (" + usuario.getSenha() + "): ");
+            String senha = scanner.nextLine();
 
-        if (!usuario.getNome().isEmpty()) {
-            usuario.setNome(nome);
+            if (!nome.isEmpty()) {
+                usuario.setNome(nome);
+            }
+            if (!username.isEmpty()) {
+                usuario.setUsername(username);
+            }
+            if (!email.isEmpty()) {
+                usuario.setEmail(email);
+            }
+            if (!senha.isEmpty()) {
+                usuario.setSenha(senha);
+            }
+            gerenciadorUsuarios.atualizar(usuario);
+            System.out.println("Perfil atualizado com sucesso!");
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao atualizar perfil: " + e.getMessage());
         }
-        if (!usuario.getUsername().isEmpty()) {
-            usuario.setUsername(username);
-        }
-        if (!usuario.getEmail().isEmpty()) {
-            usuario.setEmail(email);
-        }
-        if (!usuario.getSenha().isEmpty()) {
-            usuario.setSenha(senha);
-        }
-        gerenciadorUsuarios.atualizar(usuario);
     }
 
     private void buscarUsuarios() {
-        System.out.println("Digite o username: ");
-        String username = scanner.nextLine();
+        try {
+            System.out.println("Digite o username: ");
+            String username = scanner.nextLine();
 
-        for (Usuario usuario : gerenciadorUsuarios.listarUsuarios()) {
-            if (usuario.getUsername().equals(username)) {
-                System.out.println(usuario);
+            List<Usuario> usuarios = gerenciadorUsuarios.listarUsuarios();
+            boolean encontrado = false;
+
+            for (Usuario user : usuarios) {
+                if (user.getUsername().equals(username)) {
+                    System.out.println(user);
+                    encontrado = true;
+                }
             }
+
+            if (!encontrado) {
+                System.out.println("Usuário não encontrado.");
+            }
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao buscar usuários: " + e.getMessage());
         }
     }
 
     private void gerenciarAmizades() {
-        int opcao;
-        do {
-
-            System.out.println("1. Adicionar amizade \n2. Remover amizade \n3. Listar Amizades \n4. Voltar");
-            opcao = scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    adicionarAmizade();
-                case 2:
-                    removerAmizade();
-                case 3:
-                    listarAmizade();
-                default:
-                    System.out.println("Selecione uma opção");
+        try {
+            int opcao;
+            do {
+                System.out.println("\n===== Menu Gerenciador de Amizade =====");
+                System.out.println("\n1. Adicionar amizade \n2. Remover amizade \n3. Listar Amizades \n4. Voltar \nSelecione uma opção: ");
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+                switch (opcao) {
+                    case 1 -> adicionarAmizade();
+                    case 2 -> removerAmizade();
+                    case 3 -> listarAmizade();
+                    case 4 -> System.out.println("Voltando ao menu principal...");
+                    default -> System.out.println("Selecione uma opção");
+                }
             }
+            while (opcao != 4);
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao gerenciar amizades: " + e.getMessage());
         }
-        while (opcao != 4);
     }
 
     private void adicionarAmizade() {
-        System.out.println("Digite o username: ");
-        String username = scanner.nextLine();
+        try {
+            System.out.println("Digite o username: ");
+            String username = scanner.nextLine();
 
-        gerenciadorUsuarios.adicionarAmizade(usuario.getId(), gerenciadorUsuarios.buscarPorUsername(username).getId());
+            gerenciadorUsuarios.adicionarAmizade(usuario.getId(), gerenciadorUsuarios.buscarPorUsername(username).getId());
+            System.out.println("Amizade adicionada com sucesso!");
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao adicionar amizade: " + e.getMessage());
+        }
     }
 
     private void removerAmizade() {
-        System.out.println("Digite o username: ");
-        String username = scanner.nextLine();
+        try {
+            System.out.println("Digite o username: ");
+            String username = scanner.nextLine();
 
-        gerenciadorUsuarios.removerAmizade(usuario.getId(), gerenciadorUsuarios.buscarPorUsername(username).getId());
+            gerenciadorUsuarios.removerAmizade(usuario.getId(), gerenciadorUsuarios.buscarPorUsername(username).getId());
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao remover amizade: " + e.getMessage());
+        }
     }
 
     private void listarAmizade() {
-        for (Usuario usuario : usuario.getAmigos()) {
-            System.out.println(usuario);
+        try {
+            if (!usuario.getAmigos().isEmpty()) {
+                for (Usuario usuario : usuario.getAmigos()) {
+                    System.out.println(usuario.getUsername() + " - " + usuario.getNome());
+                }
+            } else {
+                System.out.println("Você ainda não tem amigos.");
+            }
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao listar amizades: " + e.getMessage());
         }
     }
 
     private void verFeedNoticias() {
-        List<Post> posts = gerenciadorPosts.getPosts().stream()
-                .filter(post -> usuario.getAmigos().contains(post.getAutor()) || usuario.getPosts().equals(usuario))
-                .sorted(Comparator.comparing(Post::getDataPublicacao)).toList();
-        if (!posts.isEmpty()) {
-            for (Post post : posts) {
-                System.out.println(post);
-            }
-        }
-        System.out.println("Digite o id do post para intergir");
-        int id = scanner.nextInt();
+        try {
+            System.out.println("\n===== Feed de Notícias =====");
+            List<Post> posts = gerenciadorPosts.getPosts().stream()
+                    .filter(post -> usuario.getAmigos().contains(post.getAutor()) || usuario.getPosts().equals(usuario))
+                    .sorted(Comparator.comparing(Post::getDataPublicacao)).toList();
+            if (!posts.isEmpty()) {
+                for (Post post : posts) {
+                    System.out.println(post);
+                }
+                System.out.println("Digite o ID do post para intergir");
+                int id = scanner.nextInt();
 
-        int opcao;
-        do {
-            System.out.println("1. Curtir \n2. Comentar \n3.Voltar");
-            opcao = scanner.nextInt();
+                int opcao;
+                do {
+                    System.out.println("1. Curtir \n2. Comentar \n3.Voltar");
+                    opcao = scanner.nextInt();
 
-            switch (opcao) {
-                case 1:
-                    gerenciadorPosts.curtir(id, usuario.getId());
-                case 2:
-                    comentar(id);
-                default:
-                    System.out.println("Selecione uma opção");
+                    switch (opcao) {
+                        case 1 -> gerenciadorPosts.curtir(id, usuario.getId());
+                        case 2 -> comentar(id);
+                        default -> System.out.println("Selecione uma opção");
+                    }
+                } while (opcao != 3);
+            } else {
+                System.out.println("Nenhum post encontrado no feed.");
             }
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao acessar o feed de notícias: " + e.getMessage());
         }
-        while (opcao != 3);
     }
 
     private void comentar(int id) {
-        System.out.println("Digite o comentário: ");
-        String comentario = scanner.nextLine();
-        gerenciadorPosts.comentar(new Comentario(usuario, comentario, gerenciadorPosts.buscarPorId(id)));
+        try {
+            System.out.println("Digite o comentário: ");
+            String comentario = scanner.nextLine();
+            gerenciadorPosts.comentar(new Comentario(usuario, comentario, gerenciadorPosts.buscarPorId(id)));
+            System.out.println("Comentário adicionado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao comentar no post: " + e.getMessage());
+        }
     }
-
 }

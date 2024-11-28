@@ -6,7 +6,6 @@ import com.redesocial.gerenciador.GerenciadorPosts;
 import com.redesocial.modelo.Usuario;
 import com.redesocial.gerenciador.GerenciadorUsuarios;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,11 +17,24 @@ public class MenuPrincipal {
 
     public MenuPrincipal() {
         this.gerenciadorUsuarios = new GerenciadorUsuarios();
-        this.gerenciadorPosts = new GerenciadorPosts();
+        this.gerenciadorPosts = new GerenciadorPosts(gerenciadorUsuarios);
     }
 
     List<Usuario> usuarios = new ArrayList<>();
     Scanner scanner = new Scanner(System.in);
+
+    public MenuPrincipal(GerenciadorUsuarios gerenciadorUsuarios, GerenciadorPosts gerenciadorPosts, GerenciadorUsuarios gerenciadorUsuarios1, GerenciadorPosts gerenciadorPosts1) {
+        this.gerenciadorUsuarios = gerenciadorUsuarios1;
+        this.gerenciadorPosts = gerenciadorPosts1;
+    }
+
+    public GerenciadorPosts getGerenciadorPosts() {
+        return gerenciadorPosts;
+    }
+
+    public GerenciadorUsuarios getGerenciadorUsuarios() {
+        return gerenciadorUsuarios;
+    }
 
     public void exibirMenu() {
         int opcao;
@@ -92,7 +104,7 @@ public class MenuPrincipal {
             usuarios.add(usuario1);
             System.out.println("Usuário cadastrado com sucesso!");
         } catch (ValidacaoException e) {
-            System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
+            throw new ValidacaoException("Erro ao cadastrar usuário: " + e.getMessage());
         }
     }
     private void exibirMenuLogado(Usuario usuario){
