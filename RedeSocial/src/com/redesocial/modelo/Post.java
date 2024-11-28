@@ -25,6 +25,9 @@ public class Post {
         this.comentarios = new ArrayList<>();
     }
 
+    public Post(Object autor, Usuario usuario1, String s, LocalDateTime now, Object o, Object o1) {
+    }
+
     public Integer getId() {
         return id;
     }

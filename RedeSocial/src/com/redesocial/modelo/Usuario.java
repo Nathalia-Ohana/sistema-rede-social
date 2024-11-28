@@ -3,7 +3,9 @@ package com.redesocial.modelo;
 import com.redesocial.exception.ValidacaoException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +34,10 @@ public class Usuario {
         this.dataCadastro = LocalDateTime.now();
         this.amigos = new ArrayList<>();
         this.posts = new ArrayList<>();
+    }
+
+    public Usuario() {
+        
     }
 
     public Integer getId() {
@@ -101,17 +107,16 @@ public class Usuario {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Usuario { \n")
-                .append("  id=").append(id).append(",\n")
+        sb.append("  id=").append(id).append(",\n")
                 .append("  nome='").append(nome).append("',\n")
                 .append("  username='").append(username).append("',\n")
                 .append("  email='").append(email).append("',\n")
                 .append("  senha='").append(senha).append("',\n")
-                .append("  dataCadastro=").append(dataCadastro).append(",\n")
+                .append("  data cadastro=").append(dataCadastro.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append(",\n")
                 .append("  amigos=[\n");
 
         for (Usuario amigo : amigos) {
-            sb.append("    ").append(amigo.toString()).append(",\n");
+            sb.append("    ").append(amigo.getUsername()).append(",\n");
         }
         if (!amigos.isEmpty()) {
             sb.deleteCharAt(sb.length() - 2);
@@ -120,7 +125,7 @@ public class Usuario {
                 .append("  posts=[\n");
 
         for (Post post : posts) {
-            sb.append("    ").append(post.toString()).append(",\n");
+            sb.append("    ").append(post.getConteudo()).append(",\n");
         }
         if (!posts.isEmpty()) {
             sb.deleteCharAt(sb.length() - 2);
@@ -148,6 +153,7 @@ public class Usuario {
     public void adicionarAmigo(Usuario amigo) {
         if (!amigos.contains(amigo)) {
             amigos.add(amigo);
+            amigo.adicionarAmigo(this);
         }
     }
 
