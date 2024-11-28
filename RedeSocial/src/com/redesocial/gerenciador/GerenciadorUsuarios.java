@@ -6,7 +6,6 @@ import com.redesocial.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class GerenciadorUsuarios {
 
@@ -19,63 +18,79 @@ public class GerenciadorUsuarios {
     }
 
     public void cadastrar(Usuario usuario) {
-        try{
+        try {
             validarUsuario(usuario);
             usuario.setId(proximoId++);
             usuarios.add(usuario);
-        }catch (ValidacaoException e) {
+        } catch (ValidacaoException e) {
             throw e;
         } catch (Exception e) {
-            throw new UsuarioException("Erro ao cadastrar usuário" + e.getMessage(), e);
+            throw new UsuarioException("Erro ao cadastrar usuário: " + e.getMessage(), e);
         }
     }
 
     private void validarUsuario(Usuario usuario) {
         for (Usuario user : usuarios) {
-            if (user.getUsername().equalsIgnoreCase(usuario.getUsername())) {
+            if (!user.getId().equals(usuario.getId()) && user.getUsername().equalsIgnoreCase(usuario.getUsername())) {
                 throw new ValidacaoException("Username existente! Informe um novo Username.");
             }
         }
-        if (usuario.getEmail() == null || !usuario.getEmail().contains("@") || !usuario.getEmail().contains(".")) {
+        if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
+            throw new ValidacaoException("Email inválido! O email não pode ser nulo ou vazio.");
+        }
+        if (!usuario.getEmail().contains("@")) {
             throw new ValidacaoException("Email inválido! O símbolo '@' deve estar presente.");
         }
 
         if (usuario.getSenha().length() <= 6) {
             throw new ValidacaoException("Senha inválida! A senha deve conter no mínimo 6 caracteres.");
         }
-        if ((usuario.getNome() == null || usuario.getNome().isEmpty())) {
+        if ((usuario.getNome().isEmpty())) {
             throw new ValidacaoException("O campo Nome não pode ser vazio!");
         }
     }
 
     public Usuario buscarPorId(int id) {
-        for (Usuario user : usuarios) {
-            if (user.getId() == id) {
-                return user;
+        try {
+            for (Usuario user : usuarios) {
+                if (user.getId() == id) {
+                    return user;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao buscar usuário por ID: " + e.getMessage(), e);
         }
-        return null;
     }
 
     public Usuario buscarPorUsername(String username) {
-        for (Usuario user : usuarios) {
-            if (user.getUsername().equals(username)) {
-                return user;
+        try {
+            for (Usuario user : usuarios) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao buscar usuário por username: " + e.getMessage(), e);
         }
-        return null;
     }
 
     public List<Usuario> buscarPorNome(String nome) {
-        List<Usuario> user = new ArrayList<>();
-        for (Usuario usuario1 : usuarios) {
-            if (usuario1.getNome().contains(nome)) {
-                user.add(usuario1);
+        try {
+            List<Usuario> user = new ArrayList<>();
+            for (Usuario usuario1 : usuarios) {
+                if (usuario1.getNome().contains(nome)) {
+                    user.add(usuario1);
+                }
             }
+            return user;
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao buscar usuários por nome: " + e.getMessage(), e);
         }
-        return user;
     }
-    public boolean atualizar(Usuario usuario){
+
+    public boolean atualizar(Usuario usuario) {
         try {
             validarUsuario(usuario);
 
@@ -92,17 +107,50 @@ public class GerenciadorUsuarios {
             throw new UsuarioException("Erro ao atualizar usuário" + e.getMessage(), e);
         }
     }
-    public boolean deletar(int id){
-        return usuarios.removeIf(usuario -> usuario.getId() == id);
-    }
-    public void adicionarAmizade(int idUsuario1, int idUsuario2){
-        buscarPorId(idUsuario1).adicionarAmigo(buscarPorId(idUsuario2));
-    }
-    public void removerAmizade(int idUsuario1, int idUsuario2){
-        buscarPorId(idUsuario1).removerAmigo(buscarPorId(idUsuario2));
+
+    public boolean deletar(int id) {
+        try {
+            return usuarios.removeIf(usuario -> usuario.getId() == id);
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao deletar usuário: " + e.getMessage(), e);
+        }
     }
 
-    public List<Usuario> listarUsuarios(){
-        return usuarios;
+    public void adicionarAmizade(int idUsuario1, int idUsuario2) {
+        try {
+            Usuario user1 = buscarPorId(idUsuario1);
+            Usuario user2 = buscarPorId(idUsuario2);
+
+            if (user1 == null || user2 == null) {
+                throw new UsuarioException("Usuário não encontrado para adicionar amizade.");
+            }
+
+            user1.adicionarAmigo(user2);
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao adicionar amizade: " + e.getMessage(), e);
+        }
+    }
+
+    public void removerAmizade(int idUsuario1, int idUsuario2) {
+        try {
+            Usuario user1 = buscarPorId(idUsuario1);
+            Usuario user2 = buscarPorId(idUsuario2);
+
+            if (user1 == null || user2 == null) {
+                throw new UsuarioException("Usuário não encontrado para remover amizade.");
+            }
+
+            user1.removerAmigo(user2);
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao remover amizade: " + e.getMessage(), e);
+        }
+    }
+
+    public List<Usuario> listarUsuarios() {
+        try {
+            return new ArrayList<>(usuarios);
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao listar usuários: " + e.getMessage(), e);
+        }
     }
 }

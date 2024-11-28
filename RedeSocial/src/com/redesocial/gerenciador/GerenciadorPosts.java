@@ -17,9 +17,10 @@ public class GerenciadorPosts {
 
     private GerenciadorUsuarios gerenciadorUsuarios;
 
-    public GerenciadorPosts() {
+    public GerenciadorPosts(GerenciadorUsuarios gerenciadorUsuarios) {
         this.posts = new ArrayList<>();
         this.proximoId = 1;
+        this.gerenciadorUsuarios = gerenciadorUsuarios;
     }
 
     public void criar(Post post) {
@@ -39,7 +40,7 @@ public class GerenciadorPosts {
             throw new ValidacaoException("O conteúdo do post não pode ser vazio!");
         }
         if (!gerenciadorUsuarios.listarUsuarios().contains(post.getAutor())) {
-            throw new ValidacaoException("Autor inválido!");
+            throw new ValidacaoException("Autor inválido!O autor precisa estar cadastrado");
         }
         if (post.getConteudo().length() > 280) {
             throw new ValidacaoException("Os caracteres dessa mensagem excedem o limite máximo!");
