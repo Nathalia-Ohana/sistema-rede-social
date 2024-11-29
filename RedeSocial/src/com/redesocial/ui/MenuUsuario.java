@@ -12,6 +12,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Classe que representa o menu de opções do usuário na rede social.
+ * O MenuUsuario permite que o usuário interaja com o sistema, criando posts, visualizando seu perfil, gerenciando amizades,
+ * buscando outros usuários e acessando o feed de notícias.
+ */
 public class MenuUsuario {
     Scanner scanner = new Scanner(System.in);
     private final Usuario usuario;
@@ -20,12 +25,23 @@ public class MenuUsuario {
 
     private final GerenciadorPosts gerenciadorPosts;
 
+    /**
+     * Construtor da classe MenuUsuario.
+     *
+     * @param usuario             Instância do usuário que está logado.
+     * @param gerenciadorUsuarios Gerenciador responsável pela manipulação dos usuários.
+     * @param gerenciadorPosts    Gerenciador responsável pela manipulação dos posts.
+     */
     public MenuUsuario(Usuario usuario, GerenciadorUsuarios gerenciadorUsuarios, GerenciadorPosts gerenciadorPosts) {
         this.usuario = usuario;
         this.gerenciadorUsuarios = gerenciadorUsuarios;
         this.gerenciadorPosts = gerenciadorPosts;
     }
 
+    /**
+     * Exibe o menu principal para o usuário e processa as opções selecionadas.
+     * As opções incluem criar post, ver perfil, buscar usuários, gerenciar amizades, ver feed de notícias e logout.
+     */
     public void exibirMenu() {
         int opcao;
         do {
@@ -42,7 +58,7 @@ public class MenuUsuario {
 
             switch (opcao) {
                 case 1 -> criarPost();
-                case 2 ->verPerfil();
+                case 2 -> verPerfil();
                 case 3 -> buscarUsuarios();
                 case 4 -> gerenciarAmizades();
                 case 5 -> verFeedNoticias();
@@ -52,6 +68,10 @@ public class MenuUsuario {
         } while (opcao != 6);
     }
 
+    /**
+     * Permite ao usuário criar um post.
+     * O conteúdo do post é lido e um novo post é criado e adicionado ao perfil do usuário.
+     */
     private void criarPost() {
         try {
             System.out.println("Digite o conteúdo do post: ");
@@ -65,6 +85,9 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Exibe o perfil do usuário e oferece opções para editar o perfil, excluir a conta ou excluir posts.
+     */
     private void verPerfil() {
         int opcao;
         try {
@@ -81,12 +104,15 @@ public class MenuUsuario {
                     case 3 -> deletarPost();
                     case 4 -> System.out.println("Voltando ao menu pincipal...");
                 }
-            }while(opcao != 4);
+            } while (opcao != 4);
         } catch (Exception e) {
             throw new UsuarioException("Erro ao exibir perfil: " + e.getMessage());
         }
     }
 
+    /**
+     * Permite ao usuário editar seu perfil (nome, username, email e senha).
+     */
     private void editarPerfil() {
         try {
             System.out.println("Nome (" + usuario.getNome() + "): ");
@@ -117,6 +143,10 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Permite buscar usuários pelo username e exibir informações sobre o usuário encontrado.
+     */
+
     private void buscarUsuarios() {
         try {
             System.out.println("Digite o username: ");
@@ -140,6 +170,9 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Exibe um menu para gerenciar amizades: adicionar, remover ou listar amigos.
+     */
     private void gerenciarAmizades() {
         try {
             int opcao;
@@ -162,6 +195,9 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Adiciona um novo amigo ao perfil do usuário.
+     */
     private void adicionarAmizade() {
         try {
             System.out.println("Digite o username: ");
@@ -174,6 +210,10 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Remove um amigo do perfil do usuário.
+     */
+
     private void removerAmizade() {
         try {
             System.out.println("Digite o username: ");
@@ -185,6 +225,9 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Exibe a lista de amigos do usuário.
+     */
     private void listarAmizade() {
         try {
             if (!usuario.getAmigos().isEmpty()) {
@@ -199,6 +242,10 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Exibe o feed de notícias, mostrando os posts dos amigos do usuário e seus próprios posts.
+     * O usuário pode interagir com os posts, curtindo ou comentando.
+     */
     private void verFeedNoticias() {
         try {
             System.out.println("\n===== Feed de Notícias =====");
@@ -231,6 +278,12 @@ public class MenuUsuario {
         }
     }
 
+    /**
+     * Permite ao usuário comentar em um post específico.
+     * O comentário é adicionado ao post selecionado.
+     *
+     * @param id ID do post onde o comentário será adicionado.
+     */
     private void comentar(int id) {
         try {
             System.out.println("Digite o comentário: ");
@@ -241,27 +294,40 @@ public class MenuUsuario {
             System.out.println("Erro ao comentar no post: " + e.getMessage());
         }
     }
-    private void deletarPost(){
-        try{
+
+    /**
+     * Permite ao usuário deletar um post específico.
+     *
+     * @throws PostException Se houver algum erro ao tentar excluir o post.
+     */
+    private void deletarPost() {
+        try {
             System.out.println("Digite o id do post: ");
             int id = scanner.nextInt();
             gerenciadorPosts.deletar(id);
             System.out.println("Post deletado com sucesso!");
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new PostException("Erro ao deletar post: " + e.getMessage());
         }
     }
-        private void deletarUsuario(){
-            try{
-                System.out.println("Tem certeza que deseja excluir seu perfil? (1.Sim/2.Não");
-                int opcao = scanner.nextInt();
-                if(opcao == 1){
-                    gerenciadorPosts.deletar(usuario.getId());
-                }else{
-                    System.out.println("Foi cancelada a tentativa de exclusão do seu perfil");
-                }
-            }catch(Exception e){
-                throw  new UsuarioException("Erro ao deletar perfil: " + e.getMessage());
+
+    /**
+     * Permite ao usuário excluir seu perfil da plataforma.
+     * O usuário deve confirmar a exclusão antes de prosseguir.
+     *
+     * @throws UsuarioException Se houver algum erro ao tentar excluir o perfil.
+     */
+    private void deletarUsuario() {
+        try {
+            System.out.println("Tem certeza que deseja excluir seu perfil? (1.Sim/2.Não");
+            int opcao = scanner.nextInt();
+            if (opcao == 1) {
+                gerenciadorPosts.deletar(usuario.getId());
+            } else {
+                System.out.println("Foi cancelada a tentativa de exclusão do seu perfil");
             }
+        } catch (Exception e) {
+            throw new UsuarioException("Erro ao deletar perfil: " + e.getMessage());
         }
+    }
 }
