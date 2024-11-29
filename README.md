@@ -57,52 +57,18 @@ com.redesocial/
 
 ## ✨ Exemplos de Uso
 
-### Menu Usuário
-```plaintext
-=== Cadastro de Usuário ===
-Digite seu nome: Ana Silva
-Digite seu username: ana123
-Digite seu email: ana@email.com
-Digite sua senha: ******
-Usuário cadastrado com sucesso!
-```
+### Menu de Login / Menu do Usuário
+![image](https://github.com/user-attachments/assets/d3c98c66-b487-4cb2-9245-eb64909e478a)
+
+
 
 ### Criação de Post
-```plaintext
-=== Novo Post ===
-Digite seu post:
-Meu primeiro post na rede social!
-Post publicado com sucesso!
-```
+![image](https://github.com/user-attachments/assets/fd87606b-9ac1-4ce7-a6ac-23bb4a6b67a6)
 
-### Interações
-- Curtir um post:
-  ```plaintext
-  Você curtiu o post "Meu primeiro post na rede social!".
-  ```
-- Comentar:
-  ```plaintext
-  Comentário adicionado: "Muito interessante!".
-  ```
 
-## 📊 Estruturas Visuais (Exemplo de Menu)
 
-```plaintext
-=== Menu Principal ===
-1. Fazer Login
-2. Cadastrar Novo Usuário
-3. Sair
-```
-
-**Tela de Perfil do Usuário**:
-```plaintext
-=== Perfil: João Silva ===
-Amigos: 3
-Posts: 5
-1. Adicionar Amigo
-2. Criar Post
-3. Voltar ao Menu Principal
-```
+### Gerenciador de Amizade
+![image](https://github.com/user-attachments/assets/0d026526-71c7-4fd7-a599-2d152e58404b)
 
 ## 🛠️ Decisões de Implementação
 
