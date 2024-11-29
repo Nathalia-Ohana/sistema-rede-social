@@ -4,19 +4,50 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A classe Post representa um post dentro de uma rede social.
+ * Cada post possui um autor, conteúdo, data de publicação, lista de curtidas e uma lista de comentários.
+ * Esta classe permite adicionar e remover curtidas e adicionar comentários a um post.
+ */
 public class Post {
+
+    /**
+     * ID único do post
+     */
     private Integer id;
 
+    /**
+     * Autor do post
+     */
     private Usuario autor;
 
+    /**
+     * Conteúdo do post
+     */
     private String conteudo;
 
+    /**
+     * Data e hora da publicação do post
+     */
     private LocalDateTime dataPublicacao;
 
+    /**
+     * Lista de usuários que curtiram o post
+     */
     private List<Usuario> curtidas;
 
+    /**
+     * Lista de comentários no post
+     */
     private List<Comentario> comentarios;
 
+    /**
+     * Construtor da classe {@code Post}. Inicializa o autor, conteúdo e define a data de publicação
+     * como a data e hora atual. Também inicializa as listas de curtidas e comentários.
+     *
+     * @param autor    O autor do post
+     * @param conteudo O conteúdo do post
+     */
     public Post(Usuario autor, String conteudo) {
         this.autor = autor;
         this.conteudo = conteudo;
@@ -25,9 +56,7 @@ public class Post {
         this.comentarios = new ArrayList<>();
     }
 
-    public Post(Object autor, Usuario usuario1, String s, LocalDateTime now, Object o, Object o1) {
-    }
-
+    // Métodos getters e setters
     public Integer getId() {
         return id;
     }
@@ -76,6 +105,11 @@ public class Post {
         this.comentarios = comentarios;
     }
 
+    /**
+     * Método toString que retorna uma representação textual do post.
+     *
+     * @return String representando o post, incluindo o id, autor, conteúdo, data de publicação, curtidas e comentários
+     */
     @Override
     public String toString() {
         return "Post{" +
@@ -88,19 +122,36 @@ public class Post {
                 '}';
     }
 
-    public void adicionarCurtida(Usuario usuario){
-        if(!curtidas.contains(usuario)){
+    /**
+     * Adiciona uma curtida ao post, se o usuário ainda não tiver curtido o post.
+     *
+     * @param usuario O usuário que está curtindo o post
+     */
+
+    public void adicionarCurtida(Usuario usuario) {
+        if (!curtidas.contains(usuario)) {
             curtidas.add(usuario);
         }
     }
 
-    public void removerCurtida(Usuario usuario){
-        if(curtidas.contains(usuario)){
+
+    /**
+     * Remove uma curtida do post, caso o usuário tenha curtido.
+     *
+     * @param usuario O usuário que deseja descurtir o post
+     */
+    public void removerCurtida(Usuario usuario) {
+        if (curtidas.contains(usuario)) {
             curtidas.add(usuario);
         }
     }
 
-    public void adicionarComentario(Comentario comentario){
+    /**
+     * Adiciona um comentário ao post.
+     *
+     * @param comentario O comentário a ser adicionado
+     */
+    public void adicionarComentario(Comentario comentario) {
         comentarios.add(comentario);
     }
 }
