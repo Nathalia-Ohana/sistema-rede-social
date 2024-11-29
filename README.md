@@ -101,4 +101,3 @@ com.redesocial/
 ---
 
 🖥️ Desenvolvido para aprendizado e aprimoramento de conceitos em Java!
-```
