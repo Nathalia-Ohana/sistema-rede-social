@@ -66,15 +66,22 @@ public class MenuUsuario {
     }
 
     private void verPerfil() {
+        int opcao;
         try {
-            System.out.println(usuario);
-            System.out.println("1. Editar perfil \n2. Sair");
-            int opcao = scanner.nextInt();
-            scanner.nextLine();
+            do {
+                System.out.println(usuario);
+                System.out.println("\n===== Menu de Perfil ======");
+                System.out.println("1. Editar perfil \n2.Excluir conta \n3.Excluir post \n4. Voltar");
+                opcao = scanner.nextInt();
+                scanner.nextLine();
 
-            if (opcao == 1) {
-                editarPerfil();
-            }
+                switch (opcao) {
+                    case 1 -> editarPerfil();
+                    case 2 -> deletarUsuario();
+                    case 3 -> deletarPost();
+                    case 4 -> System.out.println("Voltando ao menu pincipal...");
+                }
+            }while(opcao != 4);
         } catch (Exception e) {
             throw new UsuarioException("Erro ao exibir perfil: " + e.getMessage());
         }
@@ -234,4 +241,27 @@ public class MenuUsuario {
             System.out.println("Erro ao comentar no post: " + e.getMessage());
         }
     }
+    private void deletarPost(){
+        try{
+            System.out.println("Digite o id do post: ");
+            int id = scanner.nextInt();
+            gerenciadorPosts.deletar(id);
+            System.out.println("Post deletado com sucesso!");
+        }catch (Exception e){
+            throw new PostException("Erro ao deletar post: " + e.getMessage());
+        }
+    }
+        private void deletarUsuario(){
+            try{
+                System.out.println("Tem certeza que deseja excluir seu perfil? (1.Sim/2.Não");
+                int opcao = scanner.nextInt();
+                if(opcao == 1){
+                    gerenciadorPosts.deletar(usuario.getId());
+                }else{
+                    System.out.println("Foi cancelada a tentativa de exclusão do seu perfil");
+                }
+            }catch(Exception e){
+                throw  new UsuarioException("Erro ao deletar perfil: " + e.getMessage());
+            }
+        }
 }
